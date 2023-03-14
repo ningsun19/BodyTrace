@@ -16,48 +16,13 @@ PROC IMPORT DATAFILE=REFFILE
 RUN;
 
 **********************;
-%macro tpf_all(data=, predband=, wsize=); 
-%include '/home/u25380825/My Folder/Body trace/Code/kocak macro.sas';
-proc sql noprint; 
-select distinct count(*) into :n from 
-	(select distinct studyid from &data); 
-quit;
-
-%let n=%sysevalf(&n+0);
-
-proc sql noprint; 
-select distinct studyid	into :id1-:id&n from &data
-	order by studyid; 
-quit;
-
-%do x=1 %to &n;
-  data tempdata&x;
-  set &data;
-  if studyid=&&&id&x;
-  dtype = 0;
-  run;
-
-  %tpf(data=tempdata&x, tvar=num_days, yvar=weight, wsize=&wsize, mgroup=dtype, mtype=1, modelchoice=tt, lowerbnd=40, 
-  upperbnd=200, predband=&predband, outname=sampledata_profile&x); 
-  
-  title "ID %upcase(&&&id&x) ";
-  proc sgplot data=sampledata_profile&x;
-       scatter x=num_days y=weight / group = finalprofile 
-                                     name="points"
-                                     legendLabel="Weights";
-  run;
-  
-%end;
-%mend;
-
-***************;
 proc sql;
 create table p8w20 as 
 select * from body100.localdatetime_365
 where studyid in (select p8_w20 from work.import);
 quit;
 
-%tpf_all(data = p8w20, predband=8, wsize=20);
+%BodyTraceClean(data = p8w20, predband=8, wsize=20);
 
 data body100.classification_8_20;
 set sampledata_profile1-sampledata_profile203;
@@ -71,7 +36,7 @@ select * from body100.localdatetime_365
 where studyid in (select p8_w5 from work.import);
 quit;
 
-%tpf_all(data = p8w5, predband=8, wsize=5);
+%BodyTraceClean(data = p8w5, predband=8, wsize=5);
 
 data body100.classification_8_5;
 set sampledata_profile1-sampledata_profile34;
@@ -85,7 +50,7 @@ select * from body100.localdatetime_365
 where studyid in (select p5_w10 from work.import);
 quit;
 
-%tpf_all(data = p5w10, predband=5, wsize=10);
+%BodyTraceClean(data = p5w10, predband=5, wsize=10);
 
 data body100.classification_5_10;
 set sampledata_profile1-sampledata_profile26;
@@ -99,7 +64,7 @@ select * from body100.localdatetime_365
 where studyid in (select p5_w5 from work.import);
 quit;
 
-%tpf_all(data = p5w5, predband=5, wsize=5);
+%BodyTraceClean(data = p5w5, predband=5, wsize=5);
 
 data body100.classification_5_5;
 set sampledata_profile1-sampledata_profile3;
@@ -113,7 +78,7 @@ select * from body100.localdatetime_365
 where studyid in (select p10_w5 from work.import);
 quit;
 
-%tpf_all(data = p10w5, predband=10, wsize=5);
+%BodyTraceClean(data = p10w5, predband=10, wsize=5);
 
 data body100.classification_10_5;
 set sampledata_profile1-sampledata_profile3;
@@ -128,7 +93,7 @@ select * from body100.localdatetime_365
 where studyid in (select p10_w10 from work.import);
 quit;
 
-%tpf_all(data = p10w10, predband=10, wsize=10);
+%BodyTraceClean(data = p10w10, predband=10, wsize=10);
 
 data body100.classification_10_10;
 set sampledata_profile1-sampledata_profile6;
@@ -143,14 +108,17 @@ select * from body100.localdatetime_365
 where studyid in (select p15_w10 from work.import);
 quit;
 
-%tpf_all(data = p15w10, predband=15, wsize=10);
+%BodyTraceClean(data = p15w10, predband=15, wsize=10);
 
 data body100.classification_15_10;
 set sampledata_profile1-sampledata_profile8;
 run;
 
 
-********;
+****************;
+Cases need special parameters
+****************;
+
 data sampledata;
 set body100.localdatetime_365;
 if studyid = 1225;
@@ -167,7 +135,6 @@ proc sgplot data=sampledata_profile1;
 run;
 
 ****************;
-
 data sampledata;
 set body100.localdatetime_365;
 if studyid = 1398;
