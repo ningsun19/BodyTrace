@@ -72,8 +72,8 @@ run;
 
 
 
-%macro tpf_all(data=, predband=, wsize=); 
-*%include '/home/u25380825/My Folder/Body trace/Code/kocak macro.sas';
+%macro BodyTraceClean(data=, predband=, wsize=); 
+
 proc sql noprint; 
 select distinct count(*) into :n from 
 	(select distinct studyid from &data); 
