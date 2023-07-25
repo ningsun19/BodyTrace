@@ -1,0 +1,19 @@
+cff-version: 1.0.0
+message: "If you use this macro, please cite it as below."
+authors:
+- family-names: "Sun"
+  given-names: "Ning"
+- family-names: "Yin"
+  given-names: "Wupeng"
+- family-names: "Garcia"
+  given-names: "Stephanie"
+- family-names: "Kocak"
+  given-names: "Mehmet"
+- family-names: "Krukowski"
+  given-names: "Rebecca"
+- family-names: "Bursac"
+  given-names: "Zoran"
+title: "Macro for Body Trace Data cleaning"
+version: 1.0.0
+date-released: 2023-07-57
+url: "https://github.com/ningsun19/BodyTrace"
